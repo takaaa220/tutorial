@@ -64,5 +64,7 @@ yarn-debug.log*
 /storage/*
 !/storage/.keep
 
+# Ignore Spring files.
+/spring/*.pid
 
 # End of https://www.gitignore.io/api/rails
