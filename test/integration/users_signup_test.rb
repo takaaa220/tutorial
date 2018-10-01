@@ -12,10 +12,20 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_template "users/new"
     assert_select "div#error_explanation"
     assert_select "div.alert", "The form contains 4 errors."
-    assert_select "li", "Name can't be blank"
-    assert_select "li", "Email is invalid"
-    assert_select "li", "Password is too short (minimum is 6 characters)"
-    assert_select "li", "Password confirmation doesn't match Password"
+    assert_select "div#error_explanation ul li", count: 4
     assert_select "form[action=?]", "/signup"
+  end
+
+  test "valid signup information" do
+    get signup_path
+    assert_difference 'User.count', 1 do
+      post users_path, params: { user: { name:  "Example User",
+                                         email: "user@example.com",
+                                         password:              "password",
+                                         password_confirmation: "password" } }
+    end
+    follow_redirect!
+    assert_template 'users/show'
+    assert_not flash.empty? # テキストのテストは微妙，空かどうかを判定すれば最低限良い
   end
 end
