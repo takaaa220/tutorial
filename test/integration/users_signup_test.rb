@@ -27,5 +27,6 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_template 'users/show'
     assert_not flash.empty? # テキストのテストは微妙，空かどうかを判定すれば最低限良い
+    assert is_logged_in? # 新規登録後にログインしているか
   end
 end
