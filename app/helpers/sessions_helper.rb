@@ -14,9 +14,9 @@ module SessionsHelper
 
   # cookie に対応するユーザを返す
   def current_user
-    if user_id = session[:user_id] # 代入して存在確認
+    if (user_id = session[:user_id]) # 代入して存在確認
       @current_user ||= User.find_by(id: user_id)
-    elsif user_id = cookies.signed[:user_id] # 代入して存在確認
+    elsif (user_id = cookies.signed[:user_id]) # 代入して存在確認
       user = User.find_by(id: user_id) # user_id でユーザを検索
       # ユーザが存在し，CookieのRemember_tokenがデータベース上のremember_digestと一致するか
       if user && user.authenticated?(cookies[:remember_token])
