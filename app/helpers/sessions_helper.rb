@@ -1,5 +1,6 @@
 module SessionsHelper
 
+  # 渡されたユーザでログインする
   def log_in(user)
     session[:user_id] = user.id
   end
@@ -9,11 +10,6 @@ module SessionsHelper
     user.remember # 暗号化したremember_tokenを発行，データベース（remember_digest）に追加
     cookies.permanent.signed[:user_id] = user.id # 署名つき永続CookieにUser idを追加
     cookies.permanent[:remember_token] = user.remember_token # 永続Cookieにremember_token
-  end
-
-  def log_out
-    session.delete(:user_id)
-    @current_user = nil
   end
 
   # cookie に対応するユーザを返す
@@ -29,6 +25,24 @@ module SessionsHelper
         @current_user = user
       end
     end
+  end
+
+  # 永続的セッションの破棄
+  def forget(user)
+    # データベースからremember_digest columnの除去
+    # (remember_token, user_id が流出しても，ログアウト時にデータベースから破棄し，
+    #  ログイン時に新しいremember_tokenを取得することで，不正ログインを防ぐ)
+    user.forget
+    # 永続Cookieの破棄
+    cookies.delete(:user_id)
+    cookies.delete(:remember_token)
+  end
+
+  # 現在のユーザをログアウトする
+  def log_out
+    forget(current_user)
+    session.delete(:user_id)
+    @current_user = nil
   end
 
   # ユーザがログインしていればTrue，していなければFalseを返す
