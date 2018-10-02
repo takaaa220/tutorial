@@ -9,7 +9,25 @@ class ActiveSupport::TestCase
   fixtures :all
   include ApplicationHelper
 
+  # テストユーザがログイン中ならTrue
   def is_logged_in?
     !session[:user_id].nil?
+  end
+
+  # テストユーザとしてログインする
+  def log_in_as(user)
+    session[:user_id] = user.id
+  end
+end
+
+
+# 統合テスト用ヘルパー
+class ActionDispatch::IntegrationTest
+
+  # テストユーザとしてログインする（IntegrationTestではSessionが使えないため）
+  def log_in_as(user, password: "password", remember_me: "1")
+    post login_path params: {session: { email: user.email,
+                              password: password,
+                              remember_me: remember_me}}
   end
 end
