@@ -17,7 +17,9 @@ module SessionsHelper
     if (user_id = session[:user_id]) # 代入して存在確認
       @current_user ||= User.find_by(id: user_id)
     elsif (user_id = cookies.signed[:user_id]) # 代入して存在確認
+      # raise # 例外を発生させる(テストで捕捉されなければテストが不十分)
       user = User.find_by(id: user_id) # user_id でユーザを検索
+
       # ユーザが存在し，CookieのRemember_tokenがデータベース上のremember_digestと一致するか
       if user && user.authenticated?(cookies[:remember_token])
         # 自動ログイン
