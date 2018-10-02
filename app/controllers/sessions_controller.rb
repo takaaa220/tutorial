@@ -8,7 +8,8 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:session][:password])
       # ユーザーログイン後にユーザー情報のページにリダイレクトする
       log_in user # 一時cookie に User_id 追加
-      remember user # 署名付き永続cookie に 暗号化したRemember_token，user_id を追加
+      # 署名付き永続cookieに暗号化したRemember_token，user_id を追加, もしくは永続的セッションの破棄
+      params[:session][:remember_me] == "1" ? remember(user) : forget(user)
       flash[:success] = "ログインしました"
       redirect_to user
     else
