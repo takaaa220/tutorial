@@ -19,8 +19,9 @@ class UsersController < ApplicationController
   end
 
   private
-
+    # strong parameter の指定
     def user_params
+      # user に対し，name, email, password, password_confirmationのみ送信を許可する
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 
