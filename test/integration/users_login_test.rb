@@ -28,6 +28,8 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     delete logout_path # delete メソッドのlogout_pathを呼ぶ
     assert_not is_logged_in? # ログアウトしているはず
     assert_redirected_to root_url
+    # 二つ目のウィンドウでログアウトするとどうなるか
+    delete logout_path
     follow_redirect!
     assert_select "a[href=?]", login_path
     assert_select "a[href=?]", logout_path, count: 0
