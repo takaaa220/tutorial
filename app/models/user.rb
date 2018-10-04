@@ -9,7 +9,8 @@ class User < ApplicationRecord
                     format: {with: VALID_EMAIL_REGEX}}
 
   has_secure_password
-  validates :password, {presence: true, length: {minimum: 6}}
+  # 編集時は空白でも送信できるようにする（新規登録時はhas_secure_passwordのバリデーションでnilは通らない）
+  validates :password, {presence: true, length: {minimum: 6}, allow_nil: true}
 
   # 渡された文字列のハッシュを返す
   def self.digest(string)
