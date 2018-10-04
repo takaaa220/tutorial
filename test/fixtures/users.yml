@@ -5,3 +5,8 @@ michael:
   name: Michael Example
   email: michael@example.com
   password_digest: <%= User.digest('password') %> # "password"を暗号化
+
+archer:
+  name: Archer
+  email: duchess@example.gov
+  password_digest: <%= User.digest('password') %>
