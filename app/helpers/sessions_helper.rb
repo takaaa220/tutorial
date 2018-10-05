@@ -26,7 +26,7 @@ module SessionsHelper
       user = User.find_by(id: user_id) # user_id でユーザを検索
 
       # ユーザが存在し，CookieのRemember_tokenがデータベース上のremember_digestと一致するか
-      if user && user.authenticated?(cookies[:remember_token])
+      if user && user.authenticated?(:remember, cookies[:remember_token])
         # 自動ログイン
         log_in user
         @current_user = user
@@ -67,5 +67,5 @@ module SessionsHelper
   def store_location
     session[:forwarding_url] = request.original_url if request.get?
   end
-  
+
 end

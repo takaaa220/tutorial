@@ -6,12 +6,19 @@ class SessionsController < ApplicationController
   def create
     @user = User.find_by(email: params[:session][:email].downcase)
     if @user && @user.authenticate(params[:session][:password])
-      log_in @user # 一時cookie に User_id 追加
-      # 署名付き永続cookieに暗号化したRemember_token，user_id を追加, もしくは永続的セッションの破棄
-      params[:session][:remember_me] == "1" ? remember(@user) : forget(@user)
-      flash[:success] = "ログインしました"
-      # redirect_to @user # ユーザーログイン後にユーザー情報のページにリダイレクトする
-      redirect_back_or @user
+      if @user.activated?
+        log_in @user # 一時cookie に User_id 追加
+        # 署名付き永続cookieに暗号化したRemember_token，user_id を追加, もしくは永続的セッションの破棄
+        params[:session][:remember_me] == "1" ? remember(@user) : forget(@user)
+        flash[:success] = "ログインしました"
+        # redirect_to @user # ユーザーログイン後にユーザー情報のページにリダイレクトする
+        redirect_back_or @user
+      else
+        message = "アカウントが認証されていません．"
+        message += "メールを確認してください．"
+        flash[:message] = message
+        redirect_to root_url
+      end
     else
       flash.now[:danger] = 'アドレスまたはパスワードを確認してください' # 次のページのみ表示
       render 'new'
