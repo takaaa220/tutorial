@@ -54,6 +54,7 @@ node_modules/
 # Ignore precompiled javascript packs
 /public/packs
 /public/packs-test
+/public/uploads
 
 # Ignore yarn files
 /yarn-error.log
