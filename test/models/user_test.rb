@@ -76,4 +76,12 @@ class UserTest < ActiveSupport::TestCase
     # 記憶ダイジェストを持たないユーザに対する
     assert_not @user.authenticated?(:remember, "")
   end
+
+  test "associated microposts should be destroyed" do
+    @user.save
+    @user.microposts.create!(content: "Lorem ipsum")
+    assert_difference "Micropost.count", -1 do
+      @user.destroy
+    end
+  end
 end
